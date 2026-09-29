@@ -61,7 +61,7 @@ export default function Dashboard() {
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-800">
-            {videos.map((video) => (
+            {videos?.map((video) => (
               <tr key={video._id} className="hover:bg-zinc-800/30">
                 <td className="p-4 flex items-center gap-3">
                   <img src={video.thumbnail} className="w-16 h-10 object-cover rounded" alt="" />

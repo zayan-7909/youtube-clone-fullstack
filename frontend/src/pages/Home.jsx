@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <div className="p-6 pt-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-7 max-w-7xl mx-auto">
-      {videos.map((video) => (
+      {videos?.map((video) => (
         <VideoCard key={video._id} video={video} />
       ))}
     </div>
