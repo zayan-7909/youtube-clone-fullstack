@@ -128,7 +128,7 @@ export default function WatchPage() {
           )}
 
           <div className="space-y-3 pt-2">
-            {comments?.map((comment) => (
+            {Array.isArray(comments) && comments.map((comment) => (
               <div key={comment._id} className="flex justify-between items-start text-sm">
                 <div className="flex gap-3">
                   <img

@@ -32,7 +32,7 @@ export default function ChannelProfile() {
         </div>
       </div>
       <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {videos?.map((v) => (
+        {Array.isArray(videos) && videos.map((v) => (
           <VideoCard key={v._id} video={v} />
         ))}
       </div>
