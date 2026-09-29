@@ -1,10 +1,11 @@
 import axios from "axios";
 
-const axiosInstance = axios.create({
+const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "https://youtube-clone-fullstack-lzma.onrender.com/api/v1",
   withCredentials: true,
 });
 
+export {api}
 export default axiosInstance;
 
 api.interceptors.response.use(
