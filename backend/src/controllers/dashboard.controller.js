@@ -1,0 +1,76 @@
+import mongoose from "mongoose";
+import { Video } from "../models/video.model.js";
+import { Subscription } from "../models/subscription.model.js";
+import { Like } from "../models/like.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+
+const getChannelStats = asyncHandler(async (req, res) => {
+  const userId = new mongoose.Types.ObjectId(req.user._id);
+
+  const stats = await Video.aggregate([
+    {
+      $match: {
+        owner: userId,
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalVideos: { $sum: 1 },
+        totalViews: { $sum: "$views" },
+      },
+    },
+  ]);
+
+  const totalSubscribers = await Subscription.countDocuments({
+    channel: userId,
+  });
+
+  const totalLikes = await Like.countDocuments({
+    video: {
+      $in: await Video.find({ owner: userId }).distinct("_id"),
+    },
+  });
+
+  const result = {
+    totalVideos: stats[0]?.totalVideos || 0,
+    totalViews: stats[0]?.totalViews || 0,
+    totalSubscribers,
+    totalLikes,
+  };
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, result, "Channel stats fetched successfully"));
+});
+
+const getChannelVideos = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  const videos = await Video.aggregate([
+    {
+      $match: {
+        owner: new mongoose.Types.ObjectId(req.user._id),
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
+      $skip: (Number(page) - 1) * Number(limit),
+    },
+    {
+      $limit: Number(limit),
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, videos, "Channel videos fetched successfully"));
+});
+
+export { getChannelStats, getChannelVideos };
