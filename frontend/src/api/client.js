@@ -1,9 +1,11 @@
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: "/api/v1",
+const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://youtube-clone-fullstack-lzma.onrender.com/api/v1",
   withCredentials: true,
 });
+
+export default axiosInstance;
 
 api.interceptors.response.use(
   (response) => response.data?.data ?? response.data,
